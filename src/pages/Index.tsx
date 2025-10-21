@@ -1,13 +1,25 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
 import { StarterPrompts } from "@/components/StarterPrompts";
+import { UserMenu } from "@/components/UserMenu";
 import { useChat } from "@/hooks/useChat";
 import { Sparkles } from "lucide-react";
 
 const Index = () => {
   const { messages, sendMessage, isLoading } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate("/auth");
+      }
+    });
+  }, [navigate]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -17,11 +29,14 @@ const Index = () => {
     <div className="flex flex-col h-screen">
       {/* Header */}
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center shadow-lg">
-            <Sparkles className="w-5 h-5 text-white" />
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center shadow-lg">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold gradient-text">Gemini AI</h1>
           </div>
-          <h1 className="text-2xl font-bold gradient-text">Gemini AI</h1>
+          <UserMenu />
         </div>
       </header>
 
