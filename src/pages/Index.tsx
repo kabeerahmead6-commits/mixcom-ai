@@ -34,7 +34,7 @@ const Index = () => {
             <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center shadow-lg">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <h1 className="text-2xl font-bold gradient-text">Gemini AI</h1>
+            <h1 className="text-2xl font-bold gradient-text">MìXCOM Ai</h1>
           </div>
           <UserMenu />
         </div>

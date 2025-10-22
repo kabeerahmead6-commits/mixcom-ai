@@ -83,8 +83,8 @@ const Auth = () => {
           </CardTitle>
           <CardDescription className="text-center">
             {isSignUp
-              ? "Sign up to start using Gemini AI"
-              : "Sign in to continue to Gemini AI"}
+              ? "Sign up to start using MìXCOM Ai"
+              : "Sign in to continue to MìXCOM Ai"}
           </CardDescription>
         </CardHeader>
         <CardContent>
