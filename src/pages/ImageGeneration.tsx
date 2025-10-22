@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { UserMenu } from "@/components/UserMenu";
 import { toast } from "sonner";
 import { Sparkles, Loader2 } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const ImageGeneration = () => {
   const [prompt, setPrompt] = useState("");
@@ -68,9 +69,7 @@ const ImageGeneration = () => {
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center shadow-lg">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
+            <img src={logo} alt="MìXCOM Ai Logo" className="w-10 h-10 object-contain" />
             <h1 className="text-2xl font-bold gradient-text">Image Generation</h1>
           </div>
           <UserMenu />
