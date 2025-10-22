@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -74,9 +75,7 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
           <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-full gradient-bg flex items-center justify-center shadow-lg">
-              <Sparkles className="w-8 h-8 text-white" />
-            </div>
+            <img src={logo} alt="MìXCOM Ai Logo" className="w-16 h-16 object-contain" />
           </div>
           <CardTitle className="text-2xl text-center gradient-text">
             {isSignUp ? "Create Account" : "Welcome Back"}
