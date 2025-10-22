@@ -1,16 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
 import { StarterPrompts } from "@/components/StarterPrompts";
 import { UserMenu } from "@/components/UserMenu";
+import { ModelSelector } from "@/components/ModelSelector";
 import { useChat } from "@/hooks/useChat";
 import { Sparkles } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 const Index = () => {
   const { messages, sendMessage, isLoading } = useChat();
+  const [selectedModel, setSelectedModel] = useState("google/gemini-2.5-flash");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -26,6 +28,10 @@ const Index = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const handleSendMessage = (content: string) => {
+    sendMessage(content, selectedModel);
+  };
+
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
@@ -39,6 +45,13 @@ const Index = () => {
         </div>
       </header>
 
+      {/* Model Selector */}
+      <ModelSelector 
+        value={selectedModel} 
+        onChange={setSelectedModel} 
+        disabled={isLoading}
+      />
+
       {/* Messages */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -48,7 +61,7 @@ const Index = () => {
                 <h2 className="text-4xl font-bold gradient-text">Hello! How can I help you today?</h2>
                 <p className="text-muted-foreground text-lg">Choose a prompt below or ask me anything</p>
               </div>
-              <StarterPrompts onSelect={sendMessage} disabled={isLoading} />
+              <StarterPrompts onSelect={handleSendMessage} disabled={isLoading} />
             </div>
           ) : (
             <>
@@ -76,7 +89,7 @@ const Index = () => {
       </main>
 
       {/* Input */}
-      <ChatInput onSend={sendMessage} disabled={isLoading} />
+      <ChatInput onSend={handleSendMessage} disabled={isLoading} />
     </div>
   );
 };
