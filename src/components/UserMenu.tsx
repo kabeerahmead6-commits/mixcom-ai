@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { User, LogOut, Image, MessageSquare } from "lucide-react";
+import { User, LogOut, Image, MessageSquare, Compass } from "lucide-react";
 import { toast } from "sonner";
 
 export const UserMenu = () => {
@@ -73,6 +73,10 @@ export const UserMenu = () => {
         <DropdownMenuItem onClick={() => navigate("/")} className="cursor-pointer">
           <MessageSquare className="mr-2 h-4 w-4" />
           <span>Chat</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/discover")} className="cursor-pointer">
+          <Compass className="mr-2 h-4 w-4" />
+          <span>Discover</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate("/generate")} className="cursor-pointer">
           <Image className="mr-2 h-4 w-4" />
