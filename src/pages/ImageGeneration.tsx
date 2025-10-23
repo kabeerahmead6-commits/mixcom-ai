@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -6,26 +6,39 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { UserMenu } from "@/components/UserMenu";
 import { toast } from "sonner";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Image, Paperclip, X } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 const ImageGeneration = () => {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
 
+  const handleFileSelect = (files: FileList | null) => {
+    if (!files) return;
+    const fileArray = Array.from(files);
+    setSelectedFiles(prev => [...prev, ...fileArray]);
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
   const generateImage = async () => {
-    if (!prompt.trim()) {
-      toast.error("Please enter a prompt");
+    if (!prompt.trim() && selectedFiles.length === 0) {
+      toast.error("Please enter a prompt or upload files");
       return;
     }
 
     setIsGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke("generate-image", {
-        body: { prompt },
+        body: { prompt, files: selectedFiles.map(f => f.name) },
       });
 
       if (error) throw error;
@@ -48,6 +61,7 @@ const ImageGeneration = () => {
         }
         
         toast.success("Image generated successfully!");
+        setSelectedFiles([]);
       }
     } catch (error: any) {
       console.error("Error generating image:", error);
@@ -84,9 +98,67 @@ const ImageGeneration = () => {
                   className="min-h-[100px]"
                 />
               </div>
+
+              <div className="flex gap-2">
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => handleFileSelect(e.target.files)}
+                />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => handleFileSelect(e.target.files)}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => imageInputRef.current?.click()}
+                  disabled={isGenerating}
+                  className="flex-1"
+                >
+                  <Image className="w-4 h-4 mr-2" />
+                  Upload Image
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isGenerating}
+                  className="flex-1"
+                >
+                  <Paperclip className="w-4 h-4 mr-2" />
+                  Upload File
+                </Button>
+              </div>
+
+              {selectedFiles.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {selectedFiles.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 bg-secondary/50 rounded-lg px-3 py-2 text-sm"
+                    >
+                      <span className="truncate max-w-[200px]">{file.name}</span>
+                      <button
+                        onClick={() => removeFile(index)}
+                        className="hover:bg-destructive/20 rounded-full p-1"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <Button
                 onClick={generateImage}
-                disabled={isGenerating || !prompt.trim()}
+                disabled={isGenerating || (!prompt.trim() && selectedFiles.length === 0)}
                 className="w-full"
               >
                 {isGenerating ? (
