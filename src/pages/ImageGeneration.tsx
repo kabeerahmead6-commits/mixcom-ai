@@ -15,13 +15,6 @@ const ImageGeneration = () => {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/auth");
-      }
-    });
-  }, [navigate]);
 
   const generateImage = async () => {
     if (!prompt.trim()) {
