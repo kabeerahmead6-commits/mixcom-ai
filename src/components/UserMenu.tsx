@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { User, LogOut, Image, MessageSquare, Compass } from "lucide-react";
+import { User, LogOut, Image, MessageSquare, Compass, Video } from "lucide-react";
 import { toast } from "sonner";
 
 export const UserMenu = () => {
@@ -81,6 +81,10 @@ export const UserMenu = () => {
         <DropdownMenuItem onClick={() => navigate("/generate")} className="cursor-pointer">
           <Image className="mr-2 h-4 w-4" />
           <span>Image Generation</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/video-ai")} className="cursor-pointer">
+          <Video className="mr-2 h-4 w-4" />
+          <span>Video AI by Invideo</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
