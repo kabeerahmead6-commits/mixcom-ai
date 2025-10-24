@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
@@ -15,7 +15,17 @@ const Index = () => {
   const [selectedModel, setSelectedModel] = useState("google/gemini-2.5-flash");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
+  useEffect(() => {
+    // Handle initial prompt from Discover page
+    const initialPrompt = location.state?.initialPrompt;
+    if (initialPrompt && messages.length === 0) {
+      handleSendMessage(initialPrompt);
+      // Clear the state to prevent re-sending on refresh
+      navigate("/", { replace: true, state: {} });
+    }
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

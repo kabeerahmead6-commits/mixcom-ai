@@ -42,24 +42,26 @@ const VideoAI = () => {
       return;
     }
 
-    setIsGenerating(true);
-    try {
-      // Placeholder for Invideo API integration
-      toast.info("Video generation feature coming soon with Invideo AI integration!");
-      
-      // Future implementation will call edge function for Invideo API
-      // const { data, error } = await supabase.functions.invoke("generate-video", {
-      //   body: { prompt, files: selectedFiles.map(f => f.name) },
-      // });
+    toast.error("Video generation requires Invideo API integration. Please contact support to enable this feature with your Invideo API key.");
+    return;
 
-      setSelectedFiles([]);
-      setPrompt("");
-    } catch (error: any) {
-      console.error("Error generating video:", error);
-      toast.error("Failed to generate video");
-    } finally {
-      setIsGenerating(false);
-    }
+    // Uncomment and configure when Invideo API key is added
+    // setIsGenerating(true);
+    // try {
+    //   const { data, error } = await supabase.functions.invoke("generate-video", {
+    //     body: { prompt, files: selectedFiles.map(f => f.name) },
+    //   });
+    //   if (error) throw error;
+    //   setGeneratedVideo(data.videoUrl);
+    //   toast.success("Video generated successfully!");
+    //   setSelectedFiles([]);
+    //   setPrompt("");
+    // } catch (error: any) {
+    //   console.error("Error generating video:", error);
+    //   toast.error("Failed to generate video");
+    // } finally {
+    //   setIsGenerating(false);
+    // }
   };
 
   return (
