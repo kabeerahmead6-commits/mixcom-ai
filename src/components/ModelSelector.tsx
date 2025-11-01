@@ -8,11 +8,17 @@ interface ModelSelectorProps {
 }
 
 const models = [
+  { value: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro" },
   { value: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash" },
   { value: "google/gemini-2.5-flash-lite", label: "Gemini 2.5 Flash Lite" },
   { value: "openai/gpt-5", label: "GPT-5" },
   { value: "openai/gpt-5-mini", label: "GPT-5 Mini" },
   { value: "openai/gpt-5-nano", label: "GPT-5 Nano" },
+  { value: "openai/gpt-4o", label: "GPT-4o" },
+  { value: "anthropic/claude-sonnet-4.5", label: "Claude Sonnet 4.5" },
+  { value: "anthropic/claude-opus-4.1", label: "Claude Opus 4.1" },
+  { value: "anthropic/claude-haiku-4.5", label: "Claude Haiku 4.5" },
+  { value: "anthropic/claude-3-opus", label: "Claude 3 Opus" },
 ];
 
 export const ModelSelector = ({ value, onChange, disabled }: ModelSelectorProps) => {
