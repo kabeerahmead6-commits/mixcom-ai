@@ -135,4 +135,11 @@ All colors MUST be HSL.
   .message-ai {
     @apply bg-[hsl(var(--ai-message))] border border-[hsl(var(--ai-message-border))];
   }
+
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+  }
 }
