@@ -29,7 +29,11 @@ export const useChat = () => {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
+      // Determine which endpoint to use based on the model
+      const isClaude = model.startsWith("claude-");
+      const endpoint = isClaude ? "chat-claude" : "chat";
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
