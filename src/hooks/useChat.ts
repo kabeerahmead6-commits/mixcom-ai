@@ -52,11 +52,26 @@ export const useChat = () => {
         } else if (response.status === 402) {
           toast({
             title: "Credits Required",
-            description: "Please add credits to continue.",
+            description: isClaude 
+              ? "Your Anthropic API credits are depleted. Please add credits at console.anthropic.com"
+              : "Please add credits to continue.",
+            variant: "destructive",
+          });
+        } else if (response.status === 401) {
+          toast({
+            title: "Authentication Error",
+            description: isClaude 
+              ? "Invalid Anthropic API key. Please check your credentials."
+              : "Authentication failed.",
             variant: "destructive",
           });
         } else {
-          throw new Error("Failed to connect");
+          const errorData = await response.json().catch(() => ({}));
+          toast({
+            title: "Error",
+            description: errorData.error || "Failed to connect to AI service.",
+            variant: "destructive",
+          });
         }
         setIsLoading(false);
         return;
