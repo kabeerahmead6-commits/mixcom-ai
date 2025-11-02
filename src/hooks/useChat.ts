@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  imageUrl?: string;
 }
 
 export const useChat = () => {
@@ -15,6 +16,51 @@ export const useChat = () => {
     const userMessage: Message = { role: "user", content };
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
+
+    // Check if user wants to generate an image
+    const imageKeywords = /\b(generate|create|make|draw|show me|give me).*(image|picture|photo|pic|illustration|artwork)\b|\b(image|picture|photo|pic|illustration|artwork).*(of|for|with|about)\b/i;
+    const isImageRequest = imageKeywords.test(content.toLowerCase());
+
+    // Handle image generation
+    if (isImageRequest && model === "google/gemini-2.5-flash-image-preview") {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-image`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ prompt: content }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || "Failed to generate image");
+        }
+
+        const data = await response.json();
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: data.content || "Here's your generated image:",
+            imageUrl: data.imageUrl,
+          },
+        ]);
+        setIsLoading(false);
+        return;
+      } catch (error) {
+        console.error("Image generation error:", error);
+        toast({
+          title: "Image Generation Failed",
+          description: error instanceof Error ? error.message : "Failed to generate image",
+          variant: "destructive",
+        });
+        setMessages((prev) => prev.slice(0, -1)); // Remove user message
+        setIsLoading(false);
+        return;
+      }
+    }
 
     let assistantContent = "";
     const updateAssistant = (chunk: string) => {

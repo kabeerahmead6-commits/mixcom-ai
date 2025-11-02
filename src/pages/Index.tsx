@@ -69,7 +69,12 @@ const Index = () => {
           ) : (
             <>
               {messages.map((message, index) => (
-                <ChatMessage key={index} role={message.role} content={message.content} />
+                <ChatMessage 
+                  key={index} 
+                  role={message.role} 
+                  content={message.content}
+                  imageUrl={message.imageUrl}
+                />
               ))}
               {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
                 <div className="flex gap-3 mb-6">

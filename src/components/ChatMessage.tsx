@@ -4,9 +4,10 @@ import { Sparkles, User } from "lucide-react";
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
+  imageUrl?: string;
 }
 
-export const ChatMessage = ({ role, content }: ChatMessageProps) => {
+export const ChatMessage = ({ role, content, imageUrl }: ChatMessageProps) => {
   const isUser = role === "user";
 
   return (
@@ -19,6 +20,15 @@ export const ChatMessage = ({ role, content }: ChatMessageProps) => {
       
       <div className={cn("max-w-[80%] rounded-2xl px-4 py-3 shadow-sm", isUser ? "message-user" : "message-ai")}>
         <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>
+        {imageUrl && (
+          <div className="mt-3 rounded-lg overflow-hidden">
+            <img 
+              src={imageUrl} 
+              alt="Generated image" 
+              className="max-w-full h-auto"
+            />
+          </div>
+        )}
       </div>
 
       {isUser && (
