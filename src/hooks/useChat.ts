@@ -60,14 +60,28 @@ export const useChat = () => {
         }
 
         const data = await response.json();
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: data.content || "Here's your generated image:",
-            imageUrl: data.imageUrl,
-          },
-        ]);
+        
+        // Handle both image generation and analysis responses
+        if (data.isAnalysis) {
+          // Text-only analysis response
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: data.content || "Image analyzed successfully.",
+            },
+          ]);
+        } else {
+          // Image generation response
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: data.content || "Here's your generated image:",
+              imageUrl: data.imageUrl,
+            },
+          ]);
+        }
         setIsLoading(false);
         return;
       } catch (error) {

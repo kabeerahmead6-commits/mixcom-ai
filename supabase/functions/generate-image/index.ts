@@ -111,6 +111,15 @@ serve(async (req) => {
     const generatedImageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
     const textContent = data.choices?.[0]?.message?.content;
     
+    // Return text content if image analysis was requested but no new image generated
+    if (!generatedImageUrl && textContent && imageUrl) {
+      console.log("Image analysis returned (no new image generated)");
+      return new Response(
+        JSON.stringify({ content: textContent, isAnalysis: true }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    
     if (!generatedImageUrl) {
       console.error("No image in response:", JSON.stringify(data).substring(0, 500));
       throw new Error("No image generated");
