@@ -31,8 +31,8 @@ const Index = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = (content: string) => {
-    sendMessage(content, selectedModel);
+  const handleSendMessage = (content: string, files?: File[]) => {
+    sendMessage(content, selectedModel, files);
   };
 
   return (
@@ -74,6 +74,7 @@ const Index = () => {
                   role={message.role} 
                   content={message.content}
                   imageUrl={message.imageUrl}
+                  uploadedFiles={message.uploadedFiles}
                 />
               ))}
               {isLoading && messages[messages.length - 1]?.role !== "assistant" && (

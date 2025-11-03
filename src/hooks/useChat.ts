@@ -5,6 +5,7 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   imageUrl?: string;
+  uploadedFiles?: File[];
 }
 
 export const useChat = () => {
@@ -12,25 +13,45 @@ export const useChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const sendMessage = useCallback(async (content: string, model: string = "google/gemini-2.5-flash") => {
-    const userMessage: Message = { role: "user", content };
+  const sendMessage = useCallback(async (content: string, model: string = "google/gemini-2.5-flash", files?: File[]) => {
+    const userMessage: Message = { role: "user", content, uploadedFiles: files };
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Check if user wants to generate an image
-    const imageKeywords = /\b(generate|create|make|draw|show me|give me).*(image|picture|photo|pic|illustration|artwork)\b|\b(image|picture|photo|pic|illustration|artwork).*(of|for|with|about)\b/i;
-    const isImageRequest = imageKeywords.test(content.toLowerCase());
+    // Check if user wants to generate/edit an image
+    const imageKeywords = /\b(generate|create|make|draw|show me|give me|edit|modify|change).*(image|picture|photo|pic|illustration|artwork)\b|\b(image|picture|photo|pic|illustration|artwork).*(of|for|with|about)\b/i;
+    const isImageRequest = imageKeywords.test(content.toLowerCase()) || (files && files.length > 0);
+    const hasImageFile = files && files.length > 0 && files[0].type.startsWith('image/');
 
-    // Handle image generation
-    if (isImageRequest && model === "google/gemini-2.5-flash-image-preview") {
+    // Handle image generation/editing
+    if ((isImageRequest || hasImageFile) && model === "google/gemini-2.5-flash-image-preview") {
       try {
+        let imageBase64: string | undefined;
+        
+        // Convert uploaded image to base64 if present
+        if (hasImageFile) {
+          const file = files[0];
+          const reader = new FileReader();
+          imageBase64 = await new Promise<string>((resolve, reject) => {
+            reader.onload = () => {
+              const result = reader.result as string;
+              resolve(result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+        }
+
         const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-image`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
-          body: JSON.stringify({ prompt: content }),
+          body: JSON.stringify({ 
+            prompt: content,
+            imageUrl: imageBase64
+          }),
         });
 
         if (!response.ok) {

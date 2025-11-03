@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt } = await req.json();
+    const { prompt, imageUrl } = await req.json();
     
     if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
       return new Response(
@@ -32,7 +32,29 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY not configured");
     }
 
-    console.log("Generating image with prompt:", prompt.substring(0, 100) + "...");
+    console.log("Processing image request with prompt:", prompt.substring(0, 100) + "...");
+    console.log("Has input image:", !!imageUrl);
+
+    // Build message content
+    let messageContent: any;
+    if (imageUrl) {
+      // Image editing mode
+      messageContent = [
+        {
+          type: "text",
+          text: prompt
+        },
+        {
+          type: "image_url",
+          image_url: {
+            url: imageUrl
+          }
+        }
+      ];
+    } else {
+      // Image generation mode
+      messageContent = prompt;
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -45,7 +67,7 @@ serve(async (req) => {
         messages: [
           {
             role: "user",
-            content: prompt
+            content: messageContent
           }
         ],
         modalities: ["image", "text"]
@@ -79,16 +101,16 @@ serve(async (req) => {
     const data = await response.json();
     console.log("AI Gateway response received");
     
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const generatedImageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
     const textContent = data.choices?.[0]?.message?.content;
     
-    if (!imageUrl) {
+    if (!generatedImageUrl) {
       console.error("No image in response:", JSON.stringify(data).substring(0, 500));
       throw new Error("No image generated");
     }
 
     return new Response(
-      JSON.stringify({ imageUrl, content: textContent || "Image generated successfully" }),
+      JSON.stringify({ imageUrl: generatedImageUrl, content: textContent || "Image generated successfully" }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {

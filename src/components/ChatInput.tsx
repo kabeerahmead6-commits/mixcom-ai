@@ -5,7 +5,7 @@ import { Send, Image, Paperclip, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
-  onSend: (message: string) => void;
+  onSend: (message: string, files?: File[]) => void;
   disabled?: boolean;
 }
 
@@ -25,7 +25,7 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   const handleSubmit = () => {
     if ((!input.trim() && selectedFiles.length === 0) || disabled) return;
-    onSend(input.trim());
+    onSend(input.trim(), selectedFiles.length > 0 ? selectedFiles : undefined);
     setInput("");
     setSelectedFiles([]);
   };
