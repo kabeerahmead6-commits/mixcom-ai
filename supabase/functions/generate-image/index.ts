@@ -13,14 +13,21 @@ serve(async (req) => {
   try {
     const { prompt, imageUrl } = await req.json();
     
-    if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
+    // Allow empty prompt if image is provided (for image analysis/editing)
+    const hasImage = imageUrl && typeof imageUrl === 'string' && imageUrl.length > 0;
+    const hasPrompt = prompt && typeof prompt === 'string' && prompt.trim().length > 0;
+    
+    if (!hasPrompt && !hasImage) {
       return new Response(
-        JSON.stringify({ error: "Valid prompt is required" }),
+        JSON.stringify({ error: "Either prompt or image is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+    
+    // Use default prompt if only image is provided
+    const finalPrompt = hasPrompt ? prompt : "Analyze and describe this image in detail";
 
-    if (prompt.length > 5000) {
+    if (hasPrompt && prompt.length > 5000) {
       return new Response(
         JSON.stringify({ error: "Prompt too long (max 5000 characters)" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -32,17 +39,17 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY not configured");
     }
 
-    console.log("Processing image request with prompt:", prompt.substring(0, 100) + "...");
+    console.log("Processing image request with prompt:", finalPrompt.substring(0, 100) + "...");
     console.log("Has input image:", !!imageUrl);
 
     // Build message content
     let messageContent: any;
     if (imageUrl) {
-      // Image editing mode
+      // Image editing/analysis mode
       messageContent = [
         {
           type: "text",
-          text: prompt
+          text: finalPrompt
         },
         {
           type: "image_url",
@@ -53,7 +60,7 @@ serve(async (req) => {
       ];
     } else {
       // Image generation mode
-      messageContent = prompt;
+      messageContent = finalPrompt;
     }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
