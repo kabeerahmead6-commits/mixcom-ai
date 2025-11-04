@@ -1,13 +1,1 @@
 project_id = "qmtkhvcusvfwovwuzxtt"
-
-[functions.chat]
-verify_jwt = false
-
-[functions.chat-claude]
-verify_jwt = false
-
-[functions.generate-image]
-verify_jwt = false
-
-[functions.discover-topics]
-verify_jwt = false
