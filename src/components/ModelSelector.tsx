@@ -16,6 +16,11 @@ const models = [
   { value: "openai/gpt-5-mini", label: "GPT-5 Mini" },
   { value: "openai/gpt-5-nano", label: "GPT-5 Nano" },
   { value: "claude-sonnet-4-5", label: "Claude Sonnet 4.5" },
+  { value: "meta/llama-4", label: "Llama 4" },
+  { value: "meta/llama-4-maverick", label: "Llama 4 Maverick" },
+  { value: "meta/llama-4-scout", label: "Llama 4 Scout" },
+  { value: "xai/grok", label: "Grok" },
+  { value: "perplexity/sonar-pro", label: "Sonar Pro" },
 ];
 
 export const ModelSelector = ({ value, onChange, disabled }: ModelSelectorProps) => {
