@@ -9,6 +9,7 @@ import { ModelSelector } from "@/components/ModelSelector";
 import { useChat } from "@/hooks/useChat";
 import { Sparkles } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { ImageOptions } from "@/components/ImageGenerationOptions";
 
 const Index = () => {
   const { messages, sendMessage, isLoading } = useChat();
@@ -31,8 +32,8 @@ const Index = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = (content: string, files?: File[]) => {
-    sendMessage(content, selectedModel, files);
+  const handleSendMessage = (content: string, files?: File[], imageOptions?: ImageOptions) => {
+    sendMessage(content, selectedModel, files, imageOptions);
   };
 
   return (

@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, imageUrl } = await req.json();
+    const { prompt, imageUrl, options } = await req.json();
     
     // Allow empty prompt if image is provided (for image analysis/editing)
     const hasImage = imageUrl && typeof imageUrl === 'string' && imageUrl.length > 0;
@@ -24,8 +24,54 @@ serve(async (req) => {
       );
     }
     
-    // Use default prompt if only image is provided
-    const finalPrompt = hasPrompt ? prompt : "Analyze and describe this image in detail";
+    // Enhance prompt with advanced options
+    let finalPrompt = hasPrompt ? prompt : "Analyze and describe this image in detail";
+    
+    if (options && hasPrompt) {
+      const styleEnhancements: Record<string, string> = {
+        realistic: "ultra-realistic, photorealistic, high detail photography, professional lighting",
+        artistic: "artistic painting style, masterful brushwork, vibrant colors, gallery-worthy composition",
+        anime: "anime art style, manga inspired, vibrant colors, detailed linework, studio quality",
+        "3d": "3D rendered, ray-traced lighting, physically based materials, octane render, unreal engine quality",
+        cinematic: "cinematic composition, dramatic lighting, film grain, movie quality, epic scene",
+        abstract: "abstract art, creative interpretation, bold colors, unique perspective",
+        minimalist: "minimalist design, clean lines, simple composition, elegant simplicity",
+        watercolor: "watercolor painting style, soft blends, artistic brush strokes, paper texture",
+        digital: "digital art, modern illustration, clean vector style, polished finish",
+        fantasy: "fantasy art style, magical atmosphere, imaginative details, ethereal lighting"
+      };
+
+      const qualityEnhancements: Record<string, string> = {
+        standard: "good quality",
+        high: "high detail, intricate details, sharp focus, high resolution",
+        ultra: "ultra high quality, 8K resolution, maximum detail, professional grade, award-winning"
+      };
+
+      const aspectRatioHints: Record<string, string> = {
+        "1:1": "square format composition",
+        "16:9": "wide landscape format, cinematic framing",
+        "9:16": "vertical portrait format",
+        "4:3": "classic photograph composition",
+        "21:9": "ultra-wide cinematic format"
+      };
+
+      let enhancedPrompt = finalPrompt;
+      
+      if (options.style && options.style !== "none" && styleEnhancements[options.style]) {
+        enhancedPrompt = `${enhancedPrompt}, ${styleEnhancements[options.style]}`;
+      }
+      
+      if (options.quality && qualityEnhancements[options.quality]) {
+        enhancedPrompt = `${enhancedPrompt}, ${qualityEnhancements[options.quality]}`;
+      }
+      
+      if (options.aspectRatio && aspectRatioHints[options.aspectRatio]) {
+        enhancedPrompt = `${enhancedPrompt}, ${aspectRatioHints[options.aspectRatio]}`;
+      }
+      
+      finalPrompt = enhancedPrompt;
+      console.log("Enhanced prompt:", finalPrompt);
+    }
 
     if (hasPrompt && prompt.length > 5000) {
       return new Response(

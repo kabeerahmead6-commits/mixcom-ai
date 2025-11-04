@@ -8,12 +8,18 @@ interface Message {
   uploadedFiles?: File[];
 }
 
+export interface ImageOptions {
+  style: string;
+  aspectRatio: string;
+  quality: string;
+}
+
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const sendMessage = useCallback(async (content: string, model: string = "google/gemini-2.5-flash", files?: File[]) => {
+  const sendMessage = useCallback(async (content: string, model: string = "google/gemini-2.5-flash", files?: File[], imageOptions?: ImageOptions) => {
     const userMessage: Message = { role: "user", content, uploadedFiles: files };
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
@@ -50,7 +56,8 @@ export const useChat = () => {
           },
           body: JSON.stringify({ 
             prompt: content,
-            imageUrl: imageBase64
+            imageUrl: imageBase64,
+            options: imageOptions
           }),
         });
 

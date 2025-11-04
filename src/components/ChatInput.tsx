@@ -3,15 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Image, Paperclip, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ImageGenerationOptions, ImageOptions } from "./ImageGenerationOptions";
 
 interface ChatInputProps {
-  onSend: (message: string, files?: File[]) => void;
+  onSend: (message: string, files?: File[], imageOptions?: ImageOptions) => void;
   disabled?: boolean;
 }
 
 export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
   const [input, setInput] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [showImageOptions, setShowImageOptions] = useState(false);
+  const [imageOptions, setImageOptions] = useState<ImageOptions>({
+    style: "none",
+    aspectRatio: "1:1",
+    quality: "standard",
+  });
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,15 +32,25 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   const handleSubmit = () => {
     if ((!input.trim() && selectedFiles.length === 0) || disabled) return;
-    onSend(input.trim(), selectedFiles.length > 0 ? selectedFiles : undefined);
+    onSend(
+      input.trim(), 
+      selectedFiles.length > 0 ? selectedFiles : undefined,
+      showImageOptions ? imageOptions : undefined
+    );
     setInput("");
     setSelectedFiles([]);
+    setShowImageOptions(false);
   };
 
   const handleFileSelect = (files: FileList | null, type: 'image' | 'file') => {
     if (!files) return;
     const fileArray = Array.from(files);
     setSelectedFiles(prev => [...prev, ...fileArray]);
+    
+    // Show image options when image is uploaded
+    if (type === 'image') {
+      setShowImageOptions(true);
+    }
   };
 
   const removeFile = (index: number) => {
@@ -47,9 +64,24 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
     }
   };
 
+  useEffect(() => {
+    // Auto-show image options if prompt contains image generation keywords
+    const imageKeywords = /\b(generate|create|make|draw|show me|give me|image|picture|photo)\b/i;
+    if (imageKeywords.test(input) && !showImageOptions) {
+      setShowImageOptions(true);
+    }
+  }, [input]);
+
   return (
     <div className="border-t border-border bg-background/80 backdrop-blur-sm p-4">
       <div className="max-w-4xl mx-auto">
+        {showImageOptions && (
+          <ImageGenerationOptions
+            options={imageOptions}
+            onChange={setImageOptions}
+            disabled={disabled}
+          />
+        )}
         {selectedFiles.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-2">
             {selectedFiles.map((file, index) => (
