@@ -30,7 +30,7 @@ export const useChat = () => {
     const hasImageFile = files && files.length > 0 && files[0].type.startsWith('image/');
 
     // Handle image generation/editing
-    if ((isImageRequest || hasImageFile) && model === "google/gemini-2.5-flash-image-preview") {
+    if ((isImageRequest || hasImageFile) && model === "google/gemini-2.5-flash-image") {
       try {
         let imageBase64: string | undefined;
         
@@ -85,7 +85,7 @@ export const useChat = () => {
             {
               role: "assistant",
               content: data.content || "Here's your generated image:",
-              imageUrl: data.imageUrl,
+              imageUrl: data.image,
             },
           ]);
         }
