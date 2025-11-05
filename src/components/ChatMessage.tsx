@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Sparkles, User } from "lucide-react";
+import { LongPressImage } from "./LongPressImage";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
@@ -39,10 +40,10 @@ export const ChatMessage = ({ role, content, imageUrl, uploadedFiles }: ChatMess
         <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>
         {imageUrl && (
           <div className="mt-3 rounded-lg overflow-hidden">
-            <img 
+            <LongPressImage 
               src={imageUrl} 
-              alt="Generated image" 
-              className="max-w-full h-auto"
+              alt="Generated image"
+              className="rounded-lg"
             />
           </div>
         )}

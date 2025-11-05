@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { UserMenu } from "@/components/UserMenu";
+import { LongPressImage } from "@/components/LongPressImage";
 import { toast } from "sonner";
 import { Sparkles, Loader2, Image, Paperclip, X } from "lucide-react";
 import logo from "@/assets/logo.png";
@@ -178,7 +179,7 @@ const ImageGeneration = () => {
 
           {generatedImage && (
             <Card className="p-6">
-              <img
+              <LongPressImage
                 src={generatedImage}
                 alt="Generated image"
                 className="w-full rounded-lg"
