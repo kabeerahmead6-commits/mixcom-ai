@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, imageUrl, options } = await req.json();
+    const { prompt, imageUrl, options = {} } = await req.json();
     
     // Allow empty prompt if image is provided (for image analysis/editing)
     const hasImage = imageUrl && typeof imageUrl === 'string' && imageUrl.length > 0;
@@ -116,14 +116,15 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image-preview",
+        model: "google/gemini-2.5-flash-image",
         messages: [
           {
             role: "user",
             content: messageContent
           }
         ],
-        modalities: ["image", "text"]
+        modalities: ["image", "text"],
+        max_tokens: 1000
       }),
     });
 
@@ -172,7 +173,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ imageUrl: generatedImageUrl, content: textContent || "Image generated successfully" }),
+      JSON.stringify({ image: generatedImageUrl, content: textContent || "Image generated successfully" }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {

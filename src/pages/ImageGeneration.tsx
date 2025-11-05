@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { UserMenu } from "@/components/UserMenu";
 import { LongPressImage } from "@/components/LongPressImage";
+import { ImageGenerationOptions, ImageOptions } from "@/components/ImageGenerationOptions";
 import { toast } from "sonner";
 import { Sparkles, Loader2, Image, Paperclip, X } from "lucide-react";
 import logo from "@/assets/logo.png";
@@ -15,6 +16,11 @@ const ImageGeneration = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [imageOptions, setImageOptions] = useState<ImageOptions>({
+    style: "vivid",
+    aspectRatio: "1024x1024",
+    quality: "high"
+  });
   const imageInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -37,14 +43,21 @@ const ImageGeneration = () => {
     }
 
     setIsGenerating(true);
+    const startTime = Date.now();
+    
     try {
       const { data, error } = await supabase.functions.invoke("generate-image", {
-        body: { prompt, files: selectedFiles.map(f => f.name) },
+        body: { 
+          prompt, 
+          options: imageOptions,
+          files: selectedFiles.map(f => f.name) 
+        },
       });
 
       if (error) throw error;
 
       if (data?.image) {
+        const duration = ((Date.now() - startTime) / 1000).toFixed(1);
         setGeneratedImage(data.image);
         
         // Save to database
@@ -61,7 +74,7 @@ const ImageGeneration = () => {
           if (saveError) console.error("Error saving image:", saveError);
         }
         
-        toast.success("Image generated successfully!");
+        toast.success(`Image generated in ${duration}s!`);
         setSelectedFiles([]);
       }
     } catch (error: any) {
@@ -99,6 +112,12 @@ const ImageGeneration = () => {
                   className="min-h-[100px]"
                 />
               </div>
+
+              <ImageGenerationOptions
+                options={imageOptions}
+                onChange={setImageOptions}
+                disabled={isGenerating}
+              />
 
               <div className="flex gap-2">
                 <input
