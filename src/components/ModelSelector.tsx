@@ -1,5 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Brain } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface ModelSelectorProps {
   value: string;
@@ -12,6 +13,7 @@ const models = [
   { value: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro" },
   { value: "google/gemini-2.5-flash-lite", label: "Gemini 2.5 Flash Lite" },
   { value: "google/gemini-2.5-flash-image", label: "Gemini 2.5 Flash Image" },
+  { value: "google/veo-2", label: "Google Veo 2", isNew: true },
   { value: "openai/gpt-5", label: "GPT-5" },
   { value: "openai/gpt-5-mini", label: "GPT-5 Mini" },
   { value: "openai/gpt-5-nano", label: "GPT-5 Nano" },
@@ -30,7 +32,14 @@ export const ModelSelector = ({ value, onChange, disabled }: ModelSelectorProps)
         <SelectContent>
           {models.map((model) => (
             <SelectItem key={model.value} value={model.value}>
-              {model.label}
+              <div className="flex items-center gap-2">
+                {model.label}
+                {model.isNew && (
+                  <Badge className="bg-pink-500 hover:bg-pink-600 text-white text-[10px] px-1.5 py-0 h-4">
+                    NEW
+                  </Badge>
+                )}
+              </div>
             </SelectItem>
           ))}
         </SelectContent>
