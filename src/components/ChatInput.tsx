@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Image, Paperclip, X } from "lucide-react";
+import { Send, Image, Paperclip, X, Mic, MicOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ImageGenerationOptions, ImageOptions } from "./ImageGenerationOptions";
+import { useToast } from "@/hooks/use-toast";
 
 interface ChatInputProps {
   onSend: (message: string, files?: File[], imageOptions?: ImageOptions) => void;
@@ -19,9 +20,12 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
     aspectRatio: "1:1",
     quality: "standard",
   });
+  const [isListening, setIsListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -71,6 +75,79 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
       setShowImageOptions(true);
     }
   }, [input]);
+
+  useEffect(() => {
+    // Initialize speech recognition
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + ' ';
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        if (finalTranscript) {
+          setInput(prev => prev + finalTranscript);
+        }
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+        toast({
+          title: "Voice recognition error",
+          description: "Please try again or check microphone permissions",
+          variant: "destructive"
+        });
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [toast]);
+
+  const toggleVoiceRecognition = () => {
+    if (!recognitionRef.current) {
+      toast({
+        title: "Voice recognition not supported",
+        description: "Your browser doesn't support voice recognition",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+      toast({
+        title: "Listening...",
+        description: "Speak now to convert speech to text"
+      });
+    }
+  };
 
   return (
     <div className="border-t border-border bg-background/80 backdrop-blur-sm p-4">
@@ -136,6 +213,19 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
               disabled={disabled}
             >
               <Paperclip className="w-5 h-5" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-[52px] w-[52px] rounded-full transition-colors",
+                isListening && "bg-red-500/10 text-red-500 hover:bg-red-500/20"
+              )}
+              onClick={toggleVoiceRecognition}
+              disabled={disabled}
+            >
+              {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
             </Button>
           </div>
           <Textarea
