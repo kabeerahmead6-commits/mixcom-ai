@@ -7,12 +7,13 @@ import { StarterPrompts } from "@/components/StarterPrompts";
 import { UserMenu } from "@/components/UserMenu";
 import { ModelSelector } from "@/components/ModelSelector";
 import { useChat } from "@/hooks/useChat";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Volume2, VolumeX } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { ImageOptions } from "@/components/ImageGenerationOptions";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
-  const { messages, sendMessage, isLoading } = useChat();
+  const { messages, sendMessage, isLoading, voiceEnabled, toggleVoice } = useChat();
   const [selectedModel, setSelectedModel] = useState("google/gemini-2.5-flash");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -45,7 +46,18 @@ const Index = () => {
             <img src={logo} alt="MìXCOM Ai Logo" className="w-10 h-10 object-contain" />
             <h1 className="text-2xl font-bold gradient-text">MìXCOM Ai</h1>
           </div>
-          <UserMenu />
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleVoice}
+              className={voiceEnabled ? "text-primary" : ""}
+              title={voiceEnabled ? "Voice output enabled (Alexa mode)" : "Voice output disabled"}
+            >
+              {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+            </Button>
+            <UserMenu />
+          </div>
         </div>
       </header>
 

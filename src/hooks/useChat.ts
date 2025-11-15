@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface Message {
@@ -17,6 +17,48 @@ export interface ImageOptions {
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  useEffect(() => {
+    // Initialize speech synthesis
+    if ('speechSynthesis' in window) {
+      speechSynthesisRef.current = new SpeechSynthesisUtterance();
+      speechSynthesisRef.current.lang = 'en-US';
+      speechSynthesisRef.current.rate = 1.0;
+      speechSynthesisRef.current.pitch = 1.0;
+    }
+
+    return () => {
+      // Cleanup: cancel any ongoing speech
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const speakText = (text: string) => {
+    if (!voiceEnabled || !('speechSynthesis' in window)) return;
+
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+
+    if (speechSynthesisRef.current) {
+      speechSynthesisRef.current.text = text;
+      window.speechSynthesis.speak(speechSynthesisRef.current);
+    }
+  };
+
+  const toggleVoice = () => {
+    setVoiceEnabled(prev => {
+      const newState = !prev;
+      if (!newState) {
+        // Stop speaking when disabled
+        window.speechSynthesis.cancel();
+      }
+      return newState;
+    });
+  };
   const { toast } = useToast();
 
   const sendMessage = useCallback(async (content: string, model: string = "google/gemini-2.5-flash", files?: File[], imageOptions?: ImageOptions) => {
@@ -71,23 +113,27 @@ export const useChat = () => {
         // Handle both image generation and analysis responses
         if (data.isAnalysis) {
           // Text-only analysis response
+          const analysisContent = data.content || "Image analyzed successfully.";
           setMessages((prev) => [
             ...prev,
             {
               role: "assistant",
-              content: data.content || "Image analyzed successfully.",
+              content: analysisContent,
             },
           ]);
+          speakText(analysisContent);
         } else {
           // Image generation response
+          const imageContent = data.content || "Here's your generated image:";
           setMessages((prev) => [
             ...prev,
             {
               role: "assistant",
-              content: data.content || "Here's your generated image:",
+              content: imageContent,
               imageUrl: data.image,
             },
           ]);
+          speakText(imageContent);
         }
         setIsLoading(false);
         return;
@@ -199,6 +245,11 @@ export const useChat = () => {
       }
 
       setIsLoading(false);
+      
+      // Speak the complete response after streaming is done
+      if (assistantContent) {
+        speakText(assistantContent);
+      }
     } catch (error) {
       console.error("Chat error:", error);
       toast({
@@ -208,7 +259,7 @@ export const useChat = () => {
       });
       setIsLoading(false);
     }
-  }, [messages, toast]);
+  }, [messages, toast, voiceEnabled, speakText]);
 
-  return { messages, sendMessage, isLoading };
+  return { messages, sendMessage, isLoading, voiceEnabled, toggleVoice };
 };
