@@ -4,13 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
 import { StarterPrompts } from "@/components/StarterPrompts";
-import { UserMenu } from "@/components/UserMenu";
 import { ModelSelector } from "@/components/ModelSelector";
 import { useChat } from "@/hooks/useChat";
 import { Sparkles, Volume2, VolumeX } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { ImageOptions } from "@/components/ImageGenerationOptions";
 import { Button } from "@/components/ui/button";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 
 const Index = () => {
   const { messages, sendMessage, isLoading, voiceEnabled, toggleVoice } = useChat();
@@ -38,28 +39,32 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* Header */}
-      <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="MìXCOM Ai Logo" className="w-10 h-10 object-contain" />
-            <h1 className="text-2xl font-bold gradient-text">MìXCOM Ai</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleVoice}
-              className={voiceEnabled ? "text-primary" : ""}
-              title={voiceEnabled ? "Voice output enabled (Alexa mode)" : "Voice output disabled"}
-            >
-              {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
-            </Button>
-            <UserMenu />
-          </div>
-        </div>
-      </header>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        <AppSidebar />
+        
+        <div className="flex flex-col flex-1 h-screen">
+          {/* Header */}
+          <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+            <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <SidebarTrigger />
+                <img src={logo} alt="MìXCOM Ai Logo" className="w-10 h-10 object-contain" />
+                <h1 className="text-2xl font-bold gradient-text">MìXCOM Ai</h1>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleVoice}
+                  className={voiceEnabled ? "text-primary" : ""}
+                  title={voiceEnabled ? "Voice output enabled (Alexa mode)" : "Voice output disabled"}
+                >
+                  {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+                </Button>
+              </div>
+            </div>
+          </header>
 
       {/* Model Selector */}
       <ModelSelector 
@@ -110,9 +115,11 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Input */}
-      <ChatInput onSend={handleSendMessage} disabled={isLoading} />
-    </div>
+          {/* Input */}
+          <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+        </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
