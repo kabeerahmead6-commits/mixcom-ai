@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import ImageGeneration from "./pages/ImageGeneration";
 import VideoAI from "./pages/VideoAI";
 import Discover from "./pages/Discover";
+import AISearchPro from "./pages/AISearchPro";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/ai-search-pro" element={<AISearchPro />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/generate" element={<ImageGeneration />} />
           <Route path="/video-ai" element={<VideoAI />} />

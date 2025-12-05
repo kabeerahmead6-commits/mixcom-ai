@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { MessageSquare, Compass, Image, Video } from "lucide-react";
+import { MessageSquare, Compass, Image, Video, Search } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,6 +15,7 @@ import { UserMenu } from "@/components/UserMenu";
 const menuItems = [
   { title: "Chat", url: "/", icon: MessageSquare },
   { title: "Discover", url: "/discover", icon: Compass },
+  { title: "AI Search Pro", url: "/ai-search-pro", icon: Search },
   { title: "Image Generation", url: "/generate", icon: Image },
   { title: "Video AI", url: "/video-ai", icon: Video },
 ];
