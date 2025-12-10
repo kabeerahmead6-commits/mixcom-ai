@@ -85,7 +85,7 @@ const ImageGeneration = () => {
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src={logo} alt="MìXCOM Ai Logo" className="w-10 h-10 object-contain" />
-            <h1 className="text-2xl font-bold gradient-text">MiXCOM A Image Generation</h1>
+            <h1 className="text-2xl font-bold gradient-text">MiXCOM AI | Image Generation</h1>
           </div>
           <UserMenu />
         </div>
