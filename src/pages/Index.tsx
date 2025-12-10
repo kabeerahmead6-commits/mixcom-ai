@@ -73,8 +73,8 @@ const Index = () => {
         <div className="max-w-4xl mx-auto px-4 py-8">
           {messages.length === 0 ? <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
               <div className="space-y-4 text-center">
-                <h2 className="text-4xl font-bold gradient-text">MiXCOM AI 
-  Hello! How can I help you today?</h2>
+                <h2 className="text-4xl font-bold gradient-text">MiXCOM AI |
+ Hello! How can I help you today?</h2>
                 <p className="text-muted-foreground text-lg">Choose a prompt below or ask me anything</p>
               </div>
               <StarterPrompts onSelect={handleSendMessage} disabled={isLoading} />
