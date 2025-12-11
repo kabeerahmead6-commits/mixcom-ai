@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { MessageSquare, Compass, Image, Video, Search } from "lucide-react";
+import { MessageSquare, Compass, Image, Video, Search, Box, Wand2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +18,8 @@ const menuItems = [
   { title: "AI Search Pro", url: "/ai-search-pro", icon: Search },
   { title: "Image Generation", url: "/generate", icon: Image },
   { title: "Video AI", url: "/video-ai", icon: Video },
+  { title: "3D Cartoon Maker", url: "/3d-cartoon-maker", icon: Box },
+  { title: "MiXCOM Pro Prompts", url: "/mixcom-pro-prompts", icon: Wand2 },
 ];
 
 export function AppSidebar() {

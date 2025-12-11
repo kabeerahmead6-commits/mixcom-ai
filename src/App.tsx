@@ -9,6 +9,8 @@ import ImageGeneration from "./pages/ImageGeneration";
 import VideoAI from "./pages/VideoAI";
 import Discover from "./pages/Discover";
 import AISearchPro from "./pages/AISearchPro";
+import CartoonMaker3D from "./pages/CartoonMaker3D";
+import MixcomProPrompts from "./pages/MixcomProPrompts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/discover" element={<Discover />} />
           <Route path="/generate" element={<ImageGeneration />} />
           <Route path="/video-ai" element={<VideoAI />} />
+          <Route path="/3d-cartoon-maker" element={<CartoonMaker3D />} />
+          <Route path="/mixcom-pro-prompts" element={<MixcomProPrompts />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
