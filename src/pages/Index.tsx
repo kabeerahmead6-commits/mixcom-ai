@@ -101,7 +101,7 @@ const Index = () => {
       </main>
 
           {/* Input */}
-          <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+          <ChatInput onSend={handleSendMessage} disabled={isLoading} voiceEnabled={voiceEnabled} onToggleVoice={toggleVoice} />
         </div>
       </div>
     </SidebarProvider>;
