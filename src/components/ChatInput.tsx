@@ -1,17 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Image, Paperclip, X, Mic, MicOff } from "lucide-react";
+import { Send, Image, Paperclip, X, Mic, MicOff, Volume2, Brain, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ImageGenerationOptions, ImageOptions } from "./ImageGenerationOptions";
 import { useToast } from "@/hooks/use-toast";
-
 interface ChatInputProps {
   onSend: (message: string, files?: File[], imageOptions?: ImageOptions) => void;
   disabled?: boolean;
+  voiceEnabled?: boolean;
+  onToggleVoice?: () => void;
 }
 
-export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
+export const ChatInput = ({ onSend, disabled, voiceEnabled, onToggleVoice }: ChatInputProps) => {
   const [input, setInput] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showImageOptions, setShowImageOptions] = useState(false);
@@ -245,6 +246,45 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
           >
             <Send className="w-5 h-5 text-white" />
           </Button>
+        </div>
+        
+        {/* Voice AI Section */}
+        <div className="mt-4 p-3 rounded-xl bg-secondary/30 border border-border/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Brain className="w-4 h-4 text-primary" />
+                <span className="text-xs font-medium text-muted-foreground">NLP & Speech AI</span>
+              </div>
+              <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground/70">
+                <span className="flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  Machine Learning
+                </span>
+                <span className="text-border">•</span>
+                <span>Like Alexa, Google Assistant & Siri</span>
+              </div>
+            </div>
+            {onToggleVoice && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onToggleVoice}
+                className={cn(
+                  "h-8 px-3 text-xs gap-2 rounded-full transition-all",
+                  voiceEnabled 
+                    ? "bg-primary/10 text-primary hover:bg-primary/20" 
+                    : "hover:bg-secondary"
+                )}
+              >
+                <Volume2 className={cn("w-4 h-4", voiceEnabled && "animate-pulse")} />
+                {voiceEnabled ? "Voice On" : "Voice Off"}
+              </Button>
+            )}
+          </div>
+          <p className="text-[10px] text-muted-foreground/60 mt-2 sm:hidden">
+            Powered by NLP, Machine Learning & Speech Recognition like Alexa, Google Assistant & Siri
+          </p>
         </div>
       </div>
     </div>
