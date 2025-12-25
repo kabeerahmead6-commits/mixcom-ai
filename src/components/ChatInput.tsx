@@ -1,10 +1,36 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Image, Paperclip, X, Mic, MicOff, Volume2, Brain, Sparkles } from "lucide-react";
+import { Send, Image, Paperclip, X, Mic, MicOff, Volume2, Brain, Sparkles, Globe, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ImageGenerationOptions, ImageOptions } from "./ImageGenerationOptions";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const LANGUAGES = [
+  { code: "en-US", name: "English (US)", flag: "🇺🇸" },
+  { code: "en-GB", name: "English (UK)", flag: "🇬🇧" },
+  { code: "ta-IN", name: "Tamil (தமிழ்)", flag: "🇮🇳" },
+  { code: "hi-IN", name: "Hindi (हिंदी)", flag: "🇮🇳" },
+  { code: "es-ES", name: "Spanish (Español)", flag: "🇪🇸" },
+  { code: "fr-FR", name: "French (Français)", flag: "🇫🇷" },
+  { code: "de-DE", name: "German (Deutsch)", flag: "🇩🇪" },
+  { code: "ja-JP", name: "Japanese (日本語)", flag: "🇯🇵" },
+  { code: "ko-KR", name: "Korean (한국어)", flag: "🇰🇷" },
+  { code: "zh-CN", name: "Chinese (中文)", flag: "🇨🇳" },
+  { code: "ar-SA", name: "Arabic (العربية)", flag: "🇸🇦" },
+  { code: "pt-BR", name: "Portuguese (Português)", flag: "🇧🇷" },
+  { code: "ru-RU", name: "Russian (Русский)", flag: "🇷🇺" },
+  { code: "it-IT", name: "Italian (Italiano)", flag: "🇮🇹" },
+  { code: "te-IN", name: "Telugu (తెలుగు)", flag: "🇮🇳" },
+  { code: "ml-IN", name: "Malayalam (മലയാളം)", flag: "🇮🇳" },
+  { code: "bn-IN", name: "Bengali (বাংলা)", flag: "🇮🇳" },
+];
 interface ChatInputProps {
   onSend: (message: string, files?: File[], imageOptions?: ImageOptions) => void;
   disabled?: boolean;
@@ -22,6 +48,7 @@ export const ChatInput = ({ onSend, disabled, voiceEnabled, onToggleVoice }: Cha
     quality: "standard",
   });
   const [isListening, setIsListening] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -85,7 +112,7 @@ export const ChatInput = ({ onSend, disabled, voiceEnabled, onToggleVoice }: Cha
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = 'en-US';
+      recognitionRef.current.lang = selectedLanguage.code;
 
       recognitionRef.current.onresult = (event: any) => {
         let interimTranscript = '';
@@ -250,13 +277,13 @@ export const ChatInput = ({ onSend, disabled, voiceEnabled, onToggleVoice }: Cha
         
         {/* Voice AI Section */}
         <div className="mt-4 p-3 rounded-xl bg-secondary/30 border border-border/50">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <Brain className="w-4 h-4 text-primary" />
                 <span className="text-xs font-medium text-muted-foreground">NLP & Speech AI</span>
               </div>
-              <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground/70">
+              <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground/70">
                 <span className="flex items-center gap-1">
                   <Sparkles className="w-3 h-3" />
                   Machine Learning
@@ -265,24 +292,67 @@ export const ChatInput = ({ onSend, disabled, voiceEnabled, onToggleVoice }: Cha
                 <span>Like Alexa, Google Assistant & Siri</span>
               </div>
             </div>
-            {onToggleVoice && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onToggleVoice}
-                className={cn(
-                  "h-8 px-3 text-xs gap-2 rounded-full transition-all",
-                  voiceEnabled 
-                    ? "bg-primary/10 text-primary hover:bg-primary/20" 
-                    : "hover:bg-secondary"
-                )}
-              >
-                <Volume2 className={cn("w-4 h-4", voiceEnabled && "animate-pulse")} />
-                {voiceEnabled ? "Voice On" : "Voice Off"}
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {/* Language Selector */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-3 text-xs gap-2 rounded-full hover:bg-secondary"
+                  >
+                    <Globe className="w-4 h-4" />
+                    <span className="hidden sm:inline">{selectedLanguage.flag} {selectedLanguage.name.split(' ')[0]}</span>
+                    <span className="sm:hidden">{selectedLanguage.flag}</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
+                  {LANGUAGES.map((lang) => (
+                    <DropdownMenuItem
+                      key={lang.code}
+                      onClick={() => {
+                        setSelectedLanguage(lang);
+                        if (recognitionRef.current) {
+                          recognitionRef.current.lang = lang.code;
+                        }
+                        toast({
+                          title: "Language changed",
+                          description: `Speech recognition set to ${lang.name}`
+                        });
+                      }}
+                      className={cn(
+                        "cursor-pointer",
+                        selectedLanguage.code === lang.code && "bg-primary/10 text-primary"
+                      )}
+                    >
+                      <span className="mr-2">{lang.flag}</span>
+                      {lang.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
+              {/* Voice Toggle */}
+              {onToggleVoice && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onToggleVoice}
+                  className={cn(
+                    "h-8 px-3 text-xs gap-2 rounded-full transition-all",
+                    voiceEnabled 
+                      ? "bg-primary/10 text-primary hover:bg-primary/20" 
+                      : "hover:bg-secondary"
+                  )}
+                >
+                  <Volume2 className={cn("w-4 h-4", voiceEnabled && "animate-pulse")} />
+                  {voiceEnabled ? "Voice On" : "Voice Off"}
+                </Button>
+              )}
+            </div>
           </div>
-          <p className="text-[10px] text-muted-foreground/60 mt-2 sm:hidden">
+          <p className="text-[10px] text-muted-foreground/60 mt-2 md:hidden">
             Powered by NLP, Machine Learning & Speech Recognition like Alexa, Google Assistant & Siri
           </p>
         </div>
