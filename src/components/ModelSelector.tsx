@@ -14,7 +14,7 @@ const models = [
   { value: "google/gemini-2.5-flash-lite", label: "Gemini 2.5 Flash Lite" },
   { value: "google/gemini-2.5-flash-image", label: "Gemini 2.5 Flash Image" },
   { value: "openai/gpt-5", label: "GPT-5" },
-  { value: "openai/gpt-5-mini", label: "GPT-5 Mini" },
+  { value: "openai/gpt-5-mini", label: "MiXCOM AI 0.5 Mini" },
   { value: "openai/gpt-5-nano", label: "GPT-5 Nano" },
 ];
 
