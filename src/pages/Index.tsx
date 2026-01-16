@@ -20,7 +20,7 @@ const Index = () => {
     voiceEnabled,
     toggleVoice
   } = useChat();
-  const [selectedModel, setSelectedModel] = useState("openai/gpt-5-mini");
+  const [selectedModel, setSelectedModel] = useState("google/gemini-2.5-flash");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
