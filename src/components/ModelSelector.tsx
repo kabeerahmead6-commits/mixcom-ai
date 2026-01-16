@@ -9,7 +9,6 @@ interface ModelSelectorProps {
 }
 
 const models = [
-  { value: "openai/gpt-5-mini", label: "MiXCOM AI 0.5 Mini" },
   { value: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash" },
   { value: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro" },
   { value: "google/gemini-2.5-flash-lite", label: "Gemini 2.5 Flash Lite" },
