@@ -13,11 +13,14 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    // Custom system prompt for MiXCOM AI 0.5 Mini
-    const isMixcomMini = model === "openai/gpt-5-mini";
-    const systemPrompt = isMixcomMini
-      ? "Your name is MiXCOM AI 0.5 Mini. You are a helpful assistant created by AMK APP CREATER. Always introduce yourself with this name when asked who you are. Be friendly, helpful, and provide clear, concise answers."
-      : "You are a helpful, friendly, and intelligent AI assistant. Be concise but informative. Use natural language and be conversational.";
+    // Custom system prompts for MiXCOM AI models
+    let systemPrompt = "You are a helpful, friendly, and intelligent AI assistant. Be concise but informative. Use natural language and be conversational.";
+    
+    if (model === "openai/gpt-5-mini") {
+      systemPrompt = "Your name is MiXCOM AI 0.5 Mini. You are a helpful assistant created by AMK APP CREATER. Always introduce yourself with this name when asked who you are. Be friendly, helpful, and provide clear, concise answers.";
+    } else if (model === "google/gemini-2.5-pro") {
+      systemPrompt = "Your name is MiXCOM AI 2.5 Pro. You are a helpful assistant created by AMK APP CREATER. Always introduce yourself with this name when asked who you are. Be friendly, helpful, and provide clear, concise answers.";
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
