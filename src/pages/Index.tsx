@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
 import { StarterPrompts } from "@/components/StarterPrompts";
-
+import { ModelSelector } from "@/components/ModelSelector";
 import { useChat } from "@/hooks/useChat";
 import { Sparkles, Volume2, VolumeX } from "lucide-react";
 import logo from "@/assets/logo.png";
@@ -65,8 +65,10 @@ const Index = () => {
             </div>
           </header>
 
+          {/* Model Selector */}
+          <ModelSelector value={selectedModel} onChange={setSelectedModel} disabled={isLoading} />
 
-      {/* Messages */}
+          {/* Messages */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-4 py-8">
           {messages.length === 0 ? <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
