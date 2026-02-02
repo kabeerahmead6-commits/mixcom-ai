@@ -9,13 +9,13 @@ interface ModelSelectorProps {
 }
 
 const models = [
-  { value: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+  { value: "google/gemini-2.5-flash", label: "MiXCOM AI 2.5 Ultra" },
   { value: "openai/gpt-5-mini", label: "MiXCOM AI 0.5 Mini" },
   { value: "google/gemini-2.5-pro", label: "MiXCOM AI 2.5 Pro" },
-  { value: "google/gemini-2.5-flash-lite", label: "Gemini 2.5 Flash Lite" },
-  { value: "google/gemini-2.5-flash-image", label: "Gemini 2.5 Flash Image" },
-  { value: "openai/gpt-5", label: "GPT-5" },
-  { value: "openai/gpt-5-nano", label: "GPT-5 Nano" },
+  { value: "google/gemini-2.5-flash-lite", label: "MiXCOM AI 2.5 Ultra Lite" },
+  { value: "google/gemini-2.5-flash-image", label: "MiXCOM AI 2.5 Image" },
+  { value: "openai/gpt-5", label: "MiX-5" },
+  { value: "openai/gpt-5-nano", label: "MiX-5 Nano" },
 ];
 
 export const ModelSelector = ({ value, onChange, disabled }: ModelSelectorProps) => {
