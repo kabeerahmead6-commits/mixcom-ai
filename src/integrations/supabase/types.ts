@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          rate_limit_per_minute: number
+          request_count_current_window: number
+          scopes: string[] | null
+          updated_at: string
+          user_id: string
+          window_start_at: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name?: string
+          rate_limit_per_minute?: number
+          request_count_current_window?: number
+          scopes?: string[] | null
+          updated_at?: string
+          user_id: string
+          window_start_at?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          rate_limit_per_minute?: number
+          request_count_current_window?: number
+          scopes?: string[] | null
+          updated_at?: string
+          user_id?: string
+          window_start_at?: string
+        }
+        Relationships: []
+      }
       generated_images: {
         Row: {
           created_at: string
@@ -73,7 +124,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_api_key_usage: { Args: { p_key_id: string }; Returns: boolean }
+      validate_api_key: {
+        Args: { p_key_hash: string }
+        Returns: {
+          key_id: string
+          key_rate_limit: number
+          key_request_count: number
+          key_scopes: string[]
+          key_window_start: string
+          owner_user_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

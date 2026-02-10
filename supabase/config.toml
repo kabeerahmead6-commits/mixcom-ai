@@ -2,3 +2,9 @@ project_id = "qmtkhvcusvfwovwuzxtt"
 
 [functions.generate-video-script]
 verify_jwt = false
+
+[functions.api-keys]
+verify_jwt = false
+
+[functions.validate-api-key]
+verify_jwt = false
