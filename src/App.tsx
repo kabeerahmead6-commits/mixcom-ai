@@ -12,6 +12,7 @@ import AISearchPro from "./pages/AISearchPro";
 import CartoonMaker3D from "./pages/CartoonMaker3D";
 import MixcomProPrompts from "./pages/MixcomProPrompts";
 import ApiKeys from "./pages/ApiKeys";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/3d-cartoon-maker" element={<CartoonMaker3D />} />
           <Route path="/mixcom-pro-prompts" element={<MixcomProPrompts />} />
           <Route path="/api-keys" element={<ApiKeys />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
