@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Key, Copy, Trash2, ShieldOff, Plus, Settings as SettingsIcon } from "lucide-react";
+import { Key, Copy, Trash2, ShieldOff, Plus, Settings as SettingsIcon, CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface ApiKey {
@@ -155,6 +155,30 @@ const Settings = () => {
             Manage your account settings and API access
           </p>
         </div>
+
+        {/* Subscription Section */}
+        <section className="space-y-4">
+          <div className="flex items-center gap-2 border-b border-border pb-2">
+            <CreditCard className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold">Subscription & Plans</h2>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Manage your subscription plan and billing.
+          </p>
+          <Card>
+            <CardContent className="p-6 flex items-center justify-between">
+              <div>
+                <p className="font-medium">View and manage your subscription</p>
+                <p className="text-sm text-muted-foreground">
+                  Upgrade, downgrade, or view your current plan and billing details.
+                </p>
+              </div>
+              <Button onClick={() => navigate("/pricing")}>
+                <CreditCard className="h-4 w-4 mr-1" /> View Plans
+              </Button>
+            </CardContent>
+          </Card>
+        </section>
 
         {/* API Keys Section */}
         <section className="space-y-4">

@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { MessageSquare, Compass, Image, Video, Search, Box, Wand2, Settings } from "lucide-react";
+import { MessageSquare, Compass, Image, Video, Search, Box, Wand2, Settings, CreditCard } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -20,6 +20,7 @@ const menuItems = [
   { title: "Video AI", url: "/video-ai", icon: Video },
   { title: "3D Cartoon Maker", url: "/3d-cartoon-maker", icon: Box },
   { title: "MiXCOM Pro Prompts", url: "/mixcom-pro-prompts", icon: Wand2 },
+  { title: "Pricing & Plans", url: "/pricing", icon: CreditCard },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
