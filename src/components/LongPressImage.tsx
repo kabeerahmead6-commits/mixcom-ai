@@ -13,7 +13,7 @@ interface LongPressImageProps {
 
 export const LongPressImage = ({ src, alt, className }: LongPressImageProps) => {
   const [showActions, setShowActions] = useState(false);
-  const longPressTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleTouchStart = () => {
     longPressTimerRef.current = setTimeout(() => {
