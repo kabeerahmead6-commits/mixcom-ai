@@ -132,6 +132,18 @@ All colors MUST be HSL.
     @apply bg-[hsl(var(--user-message))] text-white;
   }
 
+  .message-user .prose {
+    @apply text-white;
+  }
+
+  .message-user .prose strong {
+    @apply text-white;
+  }
+
+  .message-user .prose li::marker {
+    @apply text-white/70;
+  }
+
   .message-ai {
     @apply bg-[hsl(var(--ai-message))] border border-[hsl(var(--ai-message-border))];
   }
