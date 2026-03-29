@@ -38,7 +38,9 @@ export const ChatMessage = ({ role, content, imageUrl, uploadedFiles }: ChatMess
             ))}
           </div>
         )}
-        <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>
+        <div className="text-sm leading-relaxed prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-headings:my-2">
+          <ReactMarkdown>{content}</ReactMarkdown>
+        </div>
         {imageUrl && (
           <div className="mt-3 rounded-lg overflow-hidden">
             <LongPressImage 
