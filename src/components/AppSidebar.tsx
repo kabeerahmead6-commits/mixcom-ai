@@ -1,16 +1,19 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { MessageSquare, Compass, Image, Video, Search, Box, Wand2, Settings, CreditCard } from "lucide-react";
+import { MessageSquare, Compass, Image, Video, Search, Box, Wand2, Settings, CreditCard, History } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/UserMenu";
+import { ChatHistory } from "@/components/ChatHistory";
 
 const menuItems = [
   { title: "Chat", url: "/", icon: MessageSquare },
@@ -24,7 +27,14 @@ const menuItems = [
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  activeSessionId?: string | null;
+  onSelectSession?: (sessionId: string) => void;
+  onNewChat?: () => void;
+  refreshTrigger?: number;
+}
+
+export function AppSidebar({ activeSessionId, onSelectSession, onNewChat, refreshTrigger }: AppSidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -47,6 +57,25 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarSeparator />
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="flex items-center gap-2">
+            <History className="h-4 w-4" />
+            Chat History
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <div className="px-2">
+              <ChatHistory
+                activeSessionId={activeSessionId ?? null}
+                onSelectSession={onSelectSession ?? (() => {})}
+                onNewChat={onNewChat ?? (() => { navigate("/"); })}
+                refreshTrigger={refreshTrigger}
+              />
+            </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
