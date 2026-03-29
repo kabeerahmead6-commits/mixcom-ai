@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Sparkles, User } from "lucide-react";
 import { LongPressImage } from "./LongPressImage";
+import ReactMarkdown from "react-markdown";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
