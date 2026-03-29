@@ -18,28 +18,25 @@ const Index = () => {
     sendMessage,
     isLoading,
     voiceEnabled,
-    toggleVoice
+    toggleVoice,
+    activeSessionId,
+    loadSession,
+    startNewChat,
+    refreshTrigger
   } = useChat();
   const [selectedModel, setSelectedModel] = useState("google/gemini-2.5-flash");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
-    // Handle initial prompt from Discover page
     const initialPrompt = location.state?.initialPrompt;
     if (initialPrompt && messages.length === 0) {
       handleSendMessage(initialPrompt);
-      // Clear the state to prevent re-sending on refresh
-      navigate("/", {
-        replace: true,
-        state: {}
-      });
+      navigate("/", { replace: true, state: {} });
     }
   }, []);
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth"
-    });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   const handleSendMessage = (content: string, files?: File[], imageOptions?: ImageOptions) => {
     sendMessage(content, selectedModel, files, imageOptions);
