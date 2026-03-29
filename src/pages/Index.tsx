@@ -43,7 +43,12 @@ const Index = () => {
   };
   return <SidebarProvider>
       <div className="flex min-h-screen w-full">
-        <AppSidebar />
+        <AppSidebar
+          activeSessionId={activeSessionId}
+          onSelectSession={loadSession}
+          onNewChat={startNewChat}
+          refreshTrigger={refreshTrigger}
+        />
         
         <div className="flex flex-col flex-1 h-screen">
           {/* Header */}
