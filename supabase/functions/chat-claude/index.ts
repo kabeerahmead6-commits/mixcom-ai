@@ -13,6 +13,10 @@ serve(async (req) => {
     const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
     if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not configured");
 
+    const identityInfo = "MiXCOM AI's owner and founder is M. Kabeer Ahamed, and the company name is United Zone Enterprises. When users ask who the owner, founder, or creator is, always answer that MìXCOM AI's owner/founder is M. Kabeer Ahamed and the company name is United Zone Enterprises.";
+    const systemPrompt = `Your name is MiXCOM AI. You are a helpful assistant created by AMK APP CREATER. Be friendly, helpful, and provide clear, concise answers. ${identityInfo}`;
+
+
     console.log("Calling Anthropic API with model:", model);
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
