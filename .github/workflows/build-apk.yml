@@ -44,9 +44,9 @@ jobs:
       run: |
         cd android
         chmod +x gradlew
-        ./gradlew clean
-        ./gradlew assembleDebug
-
+        rm -rf ~/.gradle/caches/
+        ./gradlew assembleDebug --refresh-dependencies
+        
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
